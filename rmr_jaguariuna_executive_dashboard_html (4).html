@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RMR Projects Executive Overview | Jaguariúna</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  <style>
+    :root {
+      --sea: #008998;
+      --sea2: #006772;
+      --navy: #313E49;
+      --gray: #838B92;
+      --line: #D7DEE3;
+      --red: #CF3339;
+      --red2: #961E22;
+      --green: #43B02A;
+      --yellow: #F3D03E;
+      --bg: #EEF3F5;
+      --shadow: 0 10px 26px rgba(49, 62, 73, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); font-family: Aptos, Arial, sans-serif; color: var(--navy); }
+    .page { width: 1600px; margin: auto; background: #fff; padding: 24px 26px; border-top: 7px solid var(--sea2); }
+
+    header { display: grid; grid-template-columns: 260px 1fr 260px; gap: 18px; align-items: center; margin-bottom: 14px; }
+    .logo { font-size: 40px; font-weight: 800; letter-spacing: -2px; color: var(--sea2); line-height: 1; }
+    .logo small { display: block; margin-top: 5px; font-size: 12px; letter-spacing: 0; font-weight: 400; color: #65717A; }
+    .title { text-align: center; }
+    h1 { margin: 0; font-size: 32px; color: #123047; letter-spacing: -0.7px; }
+    .subtitle { margin-top: 6px; font-size: 20px; font-weight: 700; color: #5A656D; }
+    .updated { text-align: right; font-size: 14px; color: #5A656D; }
+
+    .toolbar { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 12px; }
+    button { border: 0; border-radius: 6px; padding: 8px 11px; font-weight: 800; font-family: inherit; cursor: pointer; }
+    .btn-primary { background: var(--sea2); color: #fff; }
+    .btn-secondary { background: #E8F1F3; color: var(--sea2); border: 1px solid #BFD4DA; }
+    .btn-danger { background: #F9E8E9; color: var(--red); border: 1px solid #F0C4C7; }
+    .btn-small { font-size: 11px; padding: 5px 7px; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr) 1.25fr; gap: 10px; margin-bottom: 14px; }
+    .kpi { min-height: 92px; border: 1px solid #C9D5DC; border-radius: 8px; background: linear-gradient(#fff, #F9FBFC); padding: 13px 15px; display: flex; align-items: center; gap: 14px; box-shadow: 0 4px 14px rgba(49,62,73,.04); }
+    .kpi .icon { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 22px; border: 3px solid currentColor; flex-shrink: 0; }
+    .kpi .label { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+    .kpi .value { font-size: 34px; font-weight: 900; letter-spacing: -1px; }
+    .kpi .pct { font-size: 17px; color: #65717A; margin-left: 6px; font-weight: 600; }
+    .kpi.saving { color: #fff; background: linear-gradient(135deg, var(--sea2), #004C5A); border: 0; }
+    .kpi.saving .value { font-size: 34px; }
+
+    .main-grid { display: grid; grid-template-columns: .78fr 1.22fr; gap: 14px; }
+    .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+    .panel { background: #fff; border: 1px solid #C9D5DC; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow); }
+    .panel-title { min-height: 28px; padding: 5px 14px; font-size: 14px; font-weight: 900; color: #fff; text-transform: uppercase; background: linear-gradient(90deg, var(--sea2), var(--sea)); display: flex; justify-content: space-between; align-items: center; }
+    .panel-title span { font-size: 11px; font-weight: 600; text-transform: none; opacity: .92; }
+    .panel-body { padding: 14px; }
+    .chart-row { display: grid; grid-template-columns: 1fr 145px; gap: 10px; align-items: center; }
+    .insight-box { background: #EEF5F7; border-left: 4px solid var(--red); padding: 13px 11px; border-radius: 7px; font-size: 12px; line-height: 1.45; color: #123047; }
+    .insight-box strong { color: var(--red); font-size: 14px; }
+    .mini-kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .mini-card { border: 1px solid #99D0D6; border-radius: 8px; padding: 10px 13px; display: flex; gap: 10px; align-items: center; color: var(--sea2); font-weight: 900; }
+    .mini-card .big { font-size: 20px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 11.7px; }
+    th, td { border: 1px solid var(--line); padding: 8px 7px; text-align: left; vertical-align: top; }
+    th { background: #F7FAFB; color: #0B2238; font-weight: 900; text-align: center; }
+    .project { font-weight: 900; color: #123047; }
+    .dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+    .red { background: var(--red); }
+    .yellow { background: #FDB515; }
+    .green { background: var(--green); }
+    .gray { background: var(--gray); }
+    .pill { display: inline-block; min-width: 68px; padding: 5px 8px; border-radius: 999px; color: white; text-align: center; font-weight: 900; font-size: 11px; }
+    .high { background: linear-gradient(90deg, #D50000, var(--red)); }
+    .very { background: linear-gradient(90deg, var(--red2), var(--red)); }
+    .medium { background: linear-gradient(90deg, #F9A602, #FDB515); }
+    .low { background: linear-gradient(90deg, #2E7D32, var(--green)); }
+    .neutral { background: linear-gradient(90deg, #69757D, var(--gray)); }
+    .bullets { margin: 0; padding-left: 15px; }
+    .bullets li { margin-bottom: 3px; }
+    .actions-cell { text-align: center; white-space: nowrap; }
+
+    .risk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    .risk-card { min-height: 150px; border: 1px solid var(--line); border-radius: 8px; padding: 12px; background: #fff; }
+    .risk-head { display: flex; gap: 10px; align-items: center; font-size: 13px; font-weight: 900; margin-bottom: 8px; }
+    .risk-icon { width: 42px; height: 42px; display: grid; place-items: center; border: 2px solid currentColor; border-radius: 50%; flex-shrink: 0; }
+    .risk-card p { margin: 7px 0 0; font-size: 12.5px; line-height: 1.42; color: #123047; }
+    .risk-actions { margin-top: 9px; display: flex; gap: 6px; }
+
+    .pipeline-grid { display: grid; grid-template-columns: 1fr 165px; gap: 14px; align-items: center; }
+    .callout { border: 1px solid #C9D5DC; border-radius: 8px; background: linear-gradient(#F4F9FA, #E8F1F3); padding: 17px; text-align: center; color: var(--sea2); font-weight: 900; }
+    .callout .percent { font-size: 40px; line-height: 1; }
+    .total-bar { margin-top: 10px; margin-left: auto; width: 220px; background: linear-gradient(90deg, var(--sea2), #004C5A); color: white; padding: 10px 14px; border-radius: 5px; font-size: 18px; font-weight: 900; text-align: center; }
+
+    .admin-panel { margin-top: 14px; background: #F7FAFB; border: 1px solid #C9D5DC; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow); }
+    .admin-body { padding: 14px; }
+    .form-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 9px; align-items: end; }
+    .form-grid.cols-7 { grid-template-columns: 1.1fr .55fr .65fr .65fr 1fr 1fr 1fr auto; }
+    .form-grid.cols-4 { grid-template-columns: repeat(4, 1fr) auto; }
+    .form-grid.cols-3 { grid-template-columns: 1fr 1fr 1.3fr auto; }
+    .field label { display: block; margin-bottom: 4px; color: #5A656D; font-size: 10.5px; font-weight: 900; text-transform: uppercase; }
+    .field input, .field select, .field textarea { width: 100%; border: 1px solid #BFD4DA; border-radius: 6px; padding: 8px 9px; font-family: inherit; color: var(--navy); background: white; outline-color: var(--sea); }
+    .field input, .field select { height: 36px; }
+    .field textarea { min-height: 70px; resize: vertical; }
+    .section-admin { border-top: 1px solid #D7DEE3; margin-top: 13px; padding-top: 13px; }
+    .admin-note { color: #5A656D; font-size: 12px; margin-top: 8px; }
+    .data-table { margin-top: 10px; font-size: 11px; }
+    .data-table input { width: 100%; height: 30px; border: 1px solid #C9D5DC; border-radius: 5px; padding: 5px; }
+    .hidden { display: none !important; }
+
+    footer { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; color: #5A656D; font-size: 12px; }
+    .footer-logo { color: var(--sea2); font-size: 27px; font-weight: 800; letter-spacing: -1px; }
+
+    @media print {
+      @page {
+        size: A3 landscape;
+        margin: 5mm;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        box-shadow: none !important;
+      }
+
+      html,
+      body {
+        width: 410mm !important;
+        height: 287mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        overflow: hidden !important;
+      }
+
+      body {
+        zoom: 1 !important;
+      }
+
+      .page {
+        width: 410mm !important;
+        height: 287mm !important;
+        max-width: 410mm !important;
+        max-height: 287mm !important;
+        margin: 0 !important;
+        padding: 5mm 6mm 4mm !important;
+        border-top: 5px solid #006772 !important;
+        background: #ffffff !important;
+        overflow: hidden !important;
+        page-break-after: avoid !important;
+        page-break-before: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      .toolbar,
+      .admin-panel,
+      .actions-cell,
+      .actions-head {
+        display: none !important;
+      }
+
+      header {
+        grid-template-columns: 62mm 1fr 54mm !important;
+        gap: 5mm !important;
+        margin-bottom: 3mm !important;
+        break-inside: avoid !important;
+      }
+
+      .logo {
+        font-size: 22pt !important;
+        line-height: .9 !important;
+      }
+
+      .logo small {
+        font-size: 7pt !important;
+        margin-top: 2mm !important;
+      }
+
+      h1 {
+        font-size: 20pt !important;
+        line-height: 1.05 !important;
+      }
+
+      .subtitle {
+        font-size: 12pt !important;
+        margin-top: 2mm !important;
+      }
+
+      .updated {
+        font-size: 8pt !important;
+      }
+
+      .kpi-grid {
+        grid-template-columns: repeat(5, 1fr) 1.25fr !important;
+        gap: 2.5mm !important;
+        margin-bottom: 3mm !important;
+        break-inside: avoid !important;
+      }
+
+      .kpi {
+        min-height: 18mm !important;
+        padding: 2.4mm 3mm !important;
+        gap: 2.5mm !important;
+        background: #ffffff !important;
+        border: 1px solid #C9D5DC !important;
+        border-radius: 5px !important;
+      }
+
+      .kpi .icon {
+        width: 10mm !important;
+        height: 10mm !important;
+        font-size: 8pt !important;
+        border-width: 1.5px !important;
+      }
+
+      .kpi .label {
+        font-size: 7.4pt !important;
+        line-height: 1.05 !important;
+        margin-bottom: 1mm !important;
+      }
+
+      .kpi .value {
+        font-size: 17pt !important;
+        line-height: 1 !important;
+      }
+
+      .kpi .pct {
+        font-size: 8.5pt !important;
+      }
+
+      .kpi.saving {
+        background: #006772 !important;
+        color: #ffffff !important;
+        border: 1px solid #006772 !important;
+      }
+
+      .main-grid {
+        grid-template-columns: .74fr 1.26fr !important;
+        gap: 3mm !important;
+        height: 141mm !important;
+        margin-bottom: 3mm !important;
+        overflow: hidden !important;
+        break-inside: avoid !important;
+      }
+
+      .bottom-grid {
+        grid-template-columns: .94fr 1.06fr !important;
+        gap: 3mm !important;
+        height: 95mm !important;
+        margin-top: 0 !important;
+        overflow: hidden !important;
+        break-inside: avoid !important;
+      }
+
+      .panel {
+        background: #ffffff !important;
+        border: 1px solid #C9D5DC !important;
+        border-radius: 5px !important;
+        overflow: hidden !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      .panel-title {
+        min-height: 7mm !important;
+        padding: 1.2mm 3mm !important;
+        font-size: 8pt !important;
+        line-height: 1.1 !important;
+        background: #006772 !important;
+        color: #ffffff !important;
+        border-bottom: 1px solid #006772 !important;
+      }
+
+      .panel-title span {
+        font-size: 6.3pt !important;
+      }
+
+      .panel-body {
+        padding: 3mm !important;
+      }
+
+      .chart-row {
+        grid-template-columns: 1fr 36mm !important;
+        gap: 2mm !important;
+      }
+
+      #savingChart {
+        max-height: 78mm !important;
+      }
+
+      .insight-box {
+        background: #EEF5F7 !important;
+        border-left: 3px solid #CF3339 !important;
+        padding: 2mm !important;
+        font-size: 6.6pt !important;
+        line-height: 1.25 !important;
+      }
+
+      .insight-box strong {
+        font-size: 7.2pt !important;
+      }
+
+      .mini-kpis {
+        gap: 2mm !important;
+        margin-top: 2mm !important;
+      }
+
+      .mini-card {
+        min-height: 18mm !important;
+        padding: 2mm !important;
+        background: #ffffff !important;
+        border: 1px solid #99D0D6 !important;
+        font-size: 7.2pt !important;
+      }
+
+      .mini-card .big {
+        font-size: 9.5pt !important;
+      }
+
+      table {
+        font-size: 6.1pt !important;
+        line-height: 1.08 !important;
+      }
+
+      th,
+      td {
+        padding: 1.45mm 1.1mm !important;
+        border: 1px solid #D7DEE3 !important;
+      }
+
+      th {
+        background: #E8F1F3 !important;
+        color: #0B2238 !important;
+        font-size: 6.3pt !important;
+      }
+
+      #statusTable th:nth-child(1),
+      #statusTable td:nth-child(1) { width: 16% !important; }
+      #statusTable th:nth-child(2),
+      #statusTable td:nth-child(2) { width: 7% !important; }
+      #statusTable th:nth-child(3),
+      #statusTable td:nth-child(3) { width: 8% !important; }
+      #statusTable th:nth-child(4),
+      #statusTable td:nth-child(4) { width: 7% !important; }
+      #statusTable th:nth-child(5),
+      #statusTable td:nth-child(5) { width: 19% !important; }
+      #statusTable th:nth-child(6),
+      #statusTable td:nth-child(6) { width: 13% !important; }
+      #statusTable th:nth-child(7),
+      #statusTable td:nth-child(7) { width: 18% !important; }
+      #statusTable th:nth-child(8),
+      #statusTable td:nth-child(8) { width: 8% !important; }
+
+      .bullets {
+        padding-left: 3mm !important;
+      }
+
+      .bullets li {
+        margin-bottom: .7mm !important;
+      }
+
+      .dot {
+        width: 3.2mm !important;
+        height: 3.2mm !important;
+        margin-right: 1mm !important;
+      }
+
+      .dot.red { background: #CF3339 !important; }
+      .dot.yellow { background: #FDB515 !important; }
+      .dot.green { background: #43B02A !important; }
+      .dot.gray { background: #838B92 !important; }
+
+      .pill {
+        min-width: 15mm !important;
+        padding: 1.2mm 1.8mm !important;
+        font-size: 6.3pt !important;
+        line-height: 1 !important;
+        color: #ffffff !important;
+      }
+
+      .pill.high { background: #CF3339 !important; }
+      .pill.very { background: #961E22 !important; }
+      .pill.medium { background: #FDB515 !important; }
+      .pill.low { background: #43B02A !important; }
+      .pill.neutral { background: #838B92 !important; }
+
+      .risk-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 2.5mm !important;
+      }
+
+      .risk-card {
+        min-height: 46mm !important;
+        padding: 3mm !important;
+        background: #ffffff !important;
+        border: 1px solid #99D0D6 !important;
+      }
+
+      .risk-head {
+        font-size: 7.2pt !important;
+        line-height: 1.12 !important;
+        gap: 2mm !important;
+        margin-bottom: 2mm !important;
+      }
+
+      .risk-icon {
+        width: 9mm !important;
+        height: 9mm !important;
+        font-size: 7pt !important;
+      }
+
+      .risk-card p {
+        font-size: 6.7pt !important;
+        line-height: 1.28 !important;
+      }
+
+      .risk-actions {
+        display: none !important;
+      }
+
+      .pipeline-grid {
+        grid-template-columns: 1fr 42mm !important;
+        gap: 3mm !important;
+      }
+
+      #pipelineChart {
+        max-height: 72mm !important;
+      }
+
+      .callout {
+        padding: 4mm 2.5mm !important;
+        background: #E8F1F3 !important;
+        border: 1px solid #99D0D6 !important;
+        font-size: 7.2pt !important;
+        line-height: 1.25 !important;
+      }
+
+      .callout .percent {
+        font-size: 22pt !important;
+      }
+
+      .total-bar {
+        width: 48mm !important;
+        padding: 2mm 3mm !important;
+        margin-top: 2mm !important;
+        background: #006772 !important;
+        color: #ffffff !important;
+        font-size: 10pt !important;
+      }
+
+      footer {
+        margin-top: 2.5mm !important;
+        font-size: 6.8pt !important;
+        break-inside: avoid !important;
+      }
+
+      .footer-logo {
+        font-size: 16pt !important;
+      }
+
+      button {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 1050px) {
+      .page { width: 100%; padding: 16px; }
+      header, .main-grid, .bottom-grid, .chart-row, .pipeline-grid, .form-grid, .form-grid.cols-7, .form-grid.cols-4, .form-grid.cols-3 { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .title, .updated { text-align: left; }
+      h1 { font-size: 25px; }
+    }
+  </style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <div class="logo">Sealed Air<sup style="font-size:16px">&reg;</sup><small>Our Products Protect Your Products&reg;</small></div>
+    <div class="title"><h1>RMR Projects Executive Overview | Jaguariuna</h1><div class="subtitle">Project Portfolio Status &amp; Savings Evolution - FY2026</div></div>
+    <div class="updated">Updated: <span id="updatedView"></span></div>
+  </header>
+
+  <div class="toolbar">
+    <button class="btn-secondary" type="button" onclick="toggleAdmin()">Editar dashboard</button>
+    <button class="btn-secondary" type="button" onclick="window.print()">Exportar / Imprimir PDF</button>
+  </div>
+
+  <section class="kpi-grid">
+    <div class="kpi"><div class="icon">#</div><div><div class="label">Total de<br>Projetos</div><div class="value" id="kpiTotal"></div></div></div>
+    <div class="kpi" style="color:var(--green)"><div class="icon">OK</div><div><div class="label">Concluidos</div><div class="value"><span id="kpiDone"></span> <span class="pct" id="pctDone"></span></div></div></div>
+    <div class="kpi" style="color:var(--sea)"><div class="icon">...</div><div><div class="label">Em andamento</div><div class="value"><span id="kpiProgress"></span> <span class="pct" id="pctProgress"></span></div></div></div>
+    <div class="kpi" style="color:var(--gray)"><div class="icon">II</div><div><div class="label">On Hold</div><div class="value" style="color:#123047"><span id="kpiHold"></span> <span class="pct" id="pctHold"></span></div></div></div>
+    <div class="kpi" style="color:var(--red)"><div class="icon">!</div><div><div class="label">Em risco</div><div class="value"><span id="kpiRisk"></span> <span class="pct" id="pctRisk"></span></div></div></div>
+    <div class="kpi saving"><div><div class="label">Saving Projetado FY26</div><div class="value" id="kpiSaving"></div></div></div>
+  </section>
+
+  <section class="main-grid">
+    <div class="panel">
+      <div class="panel-title">Evolucao do Saving Acumulado em 2026 (USD)</div>
+      <div class="panel-body">
+        <div class="chart-row">
+          <canvas id="savingChart" height="270"></canvas>
+          <div class="insight-box">Savings realization remains below planned trajectory<br><strong id="gapText"></strong><br>mainly impacted by delays in testing and migration approvals.</div>
+        </div>
+        <div class="mini-kpis">
+          <div class="mini-card"><span style="font-size:30px">A</span><div>Saving acumulado<br><span id="actualLabelPeriod"></span><br><span class="big" id="savingActualCard"></span></div></div>
+          <div class="mini-card"><span style="font-size:30px">P</span><div>Saving planejado<br><span id="planLabelPeriod"></span><br><span class="big" id="savingPlanCard"></span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Status dos Projetos Criticos <span>comentarios e plano de acao ate 3 bullets</span></div>
+      <table id="statusTable">
+        <thead>
+          <tr>
+            <th>Projeto</th><th>CMS</th><th>Status</th><th>Previsao</th><th>Comentarios</th><th>Risco Principal</th><th>Plano de acao</th><th>Impacto</th><th class="actions-head">Acoes</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="admin-panel hidden" id="adminPanel">
+    <div class="panel-title">Editor do Dashboard <span>as alteracoes ficam salvas neste navegador</span></div>
+    <div class="admin-body">
+      <div class="form-grid">
+        <div class="field"><label>Data de atualizacao</label><input id="updatedInput" /></div>
+        <div class="field"><label>Total projetos</label><input id="inpTotal" type="number" min="0" /></div>
+        <div class="field"><label>Concluidos</label><input id="inpDone" type="number" min="0" /></div>
+        <div class="field"><label>Em andamento</label><input id="inpProgress" type="number" min="0" /></div>
+        <div class="field"><label>On hold</label><input id="inpHold" type="number" min="0" /></div>
+        <div class="field"><label>Em risco</label><input id="inpRisk" type="number" min="0" /></div>
+        <div class="field"><label>Saving Projetado FY26</label><input id="inpSaving" /></div>
+        <button class="btn-primary" type="button" onclick="saveGeneral()">Salvar KPIs</button>
+      </div>
+      <div class="admin-note">As porcentagens dos KPIs sao calculadas automaticamente com base no Total de Projetos.</div>
+
+      <div class="section-admin">
+        <div class="panel-title">Projetos criticos</div>
+        <form id="projectForm" class="form-grid cols-7" style="margin-top:10px">
+          <input type="hidden" id="editProjectIndex" />
+          <div class="field"><label>Projeto</label><input id="projeto" required /></div>
+          <div class="field"><label>CMS</label><input id="cms" required /></div>
+          <div class="field"><label>Status</label><select id="status"><option>Em risco</option><option>Atencao</option><option>On track</option><option>On hold</option><option>Concluido</option></select></div>
+          <div class="field"><label>Previsao</label><input id="previsao" required /></div>
+          <div class="field"><label>Comentarios - ate 3 bullets</label><textarea id="comentarios" placeholder="Um bullet por linha"></textarea></div>
+          <div class="field"><label>Risco principal</label><textarea id="risco" required></textarea></div>
+          <div class="field"><label>Plano de acao - ate 3 bullets</label><textarea id="plano" placeholder="Um bullet por linha"></textarea></div>
+          <div class="field"><label>Impacto</label><select id="impacto"><option>Muito Alto</option><option>Alto</option><option>Medio</option><option>Baixo</option><option>Neutro</option></select></div>
+          <button type="submit" class="btn-primary" id="projectSaveBtn">Adicionar</button>
+        </form>
+        <div class="admin-note"><button class="btn-danger btn-small" type="button" onclick="resetProjects()">Restaurar projetos padrao</button> <button class="btn-secondary btn-small" type="button" onclick="clearProjectForm()">Limpar formulario</button></div>
+      </div>
+
+      <div class="section-admin">
+        <div class="panel-title">Evolucao do saving acumulado</div>
+        <div class="form-grid cols-4" style="margin-top:10px">
+          <div class="field"><label>Periodo card actual</label><input id="actualPeriod" /></div>
+          <div class="field"><label>Valor card actual</label><input id="actualCard" /></div>
+          <div class="field"><label>Periodo card plan</label><input id="planPeriod" /></div>
+          <div class="field"><label>Valor card plan</label><input id="planCard" /></div>
+          <button class="btn-primary" type="button" onclick="saveSavingsMeta()">Salvar cards</button>
+        </div>
+        <table class="data-table" id="savingEditTable"><thead><tr><th>Mes</th><th>Plan USD k</th><th>Act USD k</th></tr></thead><tbody></tbody></table>
+        <div class="admin-note"><button class="btn-primary btn-small" type="button" onclick="saveSavingRows()">Salvar grafico de saving</button></div>
+      </div>
+
+      <div class="section-admin">
+        <div class="panel-title">Top riscos executivos</div>
+        <form id="riskForm" class="form-grid cols-4" style="margin-top:10px">
+          <input type="hidden" id="editRiskIndex" />
+          <div class="field"><label>Titulo</label><input id="riskTitle" required /></div>
+          <div class="field"><label>Impacta</label><input id="riskImpact" required /></div>
+          <div class="field"><label>Descricao</label><textarea id="riskDescription" required></textarea></div>
+          <div class="field"><label>Cor</label><select id="riskColor"><option value="red">Vermelho</option><option value="yellow">Amarelo</option><option value="sea">Azul</option><option value="green">Verde</option></select></div>
+          <button class="btn-primary" id="riskSaveBtn">Adicionar</button>
+        </form>
+      </div>
+
+      <div class="section-admin">
+        <div class="panel-title">Pipeline de savings</div>
+        <form id="pipelineForm" class="form-grid cols-3" style="margin-top:10px">
+          <input type="hidden" id="editPipelineIndex" />
+          <div class="field"><label>Projeto</label><input id="pipeName" required /></div>
+          <div class="field"><label>Valor USD k</label><input id="pipeValue" type="number" step="0.1" required /></div>
+          <div class="field"><label>Total USD</label><input id="pipelineTotal" /></div>
+          <button class="btn-primary" id="pipelineSaveBtn">Adicionar/Salvar</button>
+        </form>
+        <table class="data-table" id="pipelineTable"><thead><tr><th>Projeto</th><th>Valor USD k</th><th>Acoes</th></tr></thead><tbody></tbody></table>
+        <div class="admin-note"><button class="btn-primary btn-small" type="button" onclick="savePipelineTotal()">Salvar Total USD</button> <button class="btn-danger btn-small" type="button" onclick="resetAll()">Restaurar tudo</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bottom-grid">
+    <div class="panel"><div class="panel-title">Top Riscos Executivos</div><div class="panel-body risk-grid" id="riskGrid"></div></div>
+    <div class="panel"><div class="panel-title">Pipeline de Savings - Potencial Anual (USD)</div><div class="panel-body"><div class="pipeline-grid"><canvas id="pipelineChart" height="230"></canvas><div class="callout">Maior iniciativa representa<br><span class="percent" id="topPipelinePct"></span><br>do potencial total identificado.</div></div><div class="total-bar" id="pipelineTotalView"></div></div></div>
+  </section>
+
+  <footer><div>Fonte: RMR Jaguariuna Project Tracking &nbsp; | &nbsp; FY = Full Year (2026) &nbsp; | &nbsp; Valores em USD</div><div class="footer-logo">Sealed Air<sup style="font-size:12px">&reg;</sup></div></footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  if (window.Chart && window.ChartDataLabels) {
+    Chart.register(ChartDataLabels);
+    Chart.defaults.font.family = 'Aptos, Arial, sans-serif';
+    Chart.defaults.color = '#313E49';
+  }
+
+  var months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+  var defaults = {
+    general: { updated: 'May 22, 2026', total: 17, done: 8, progress: 6, hold: 3, risk: 1, saving: 'USD 912k' },
+    savingMeta: { actualPeriod: 'Jan-mai/26', actualCard: 'USD 51.3k', planPeriod: 'Jan-abr/26', planCard: 'USD 60.5k' },
+    savingRows: months.map(function (m, i) {
+      return {
+        month: m,
+        plan: [0, 0, 0, 30.25, 60.5, 90.75, 121, 156.25, 191.5, 336, 654.1, 972.2][i],
+        act: [0, 0, 0, 31.08, 51.28, null, null, null, null, null, null, null][i]
+      };
+    }),
+    projects: [
+      { projeto: 'GRSY to FATY', cms: '#2285', status: 'Em risco', previsao: 'Jun/26', comentarios: ['Rodando nas linhas de Extrusao', 'Ultima producao assistida', 'Proxima carga em acompanhamento'], risco: 'Instabilidade em LRVP', plano: ['Monitorar producao assistida', 'Monitorar clientes', 'Acompanhar estouro em LRVP'], impacto: 'Alto' },
+      { projeto: 'ZONK to LEEP / SHEL to HUSK', cms: '#2343 / #2344', status: 'Atencao', previsao: 'Dez/26', comentarios: ['Teste a ser realizado em Duncan', 'Resinas enviadas', 'Conclusao prevista apos testes'], risco: 'Atraso no Migration Report', plano: ['FUP com Jackie Simpson', 'Monitorar envios com IMPEX', 'Preparar documentacao'], impacto: 'Alto' },
+      { projeto: 'BRDOD to LUFS', cms: '#2373', status: 'Atencao', previsao: 'Dez/26', comentarios: ['Material em chegada', 'Plano de teste com time', 'Validacao tecnica pendente'], risco: 'Instabilidade de balao', plano: ['Incluir pontos criticos no teste', 'Acao rapida durante correcoes', 'Monitorar processo'], impacto: 'Muito Alto' },
+      { projeto: 'ROCP to CASSA', cms: '#2355', status: 'Atencao', previsao: 'Nov/26', comentarios: ['Teste offline executado', 'Dados compartilhados com Cassava', 'Aguardando melhorias'], risco: 'Fluidez do amido abaixo do alvo', plano: ['Alinhar dados tecnicos', 'Garantir ajustes necessarios', 'Monitorar custo final'], impacto: 'Medio' },
+      { projeto: 'SOTCS to BRENN515', cms: '#2330', status: 'Atencao', previsao: 'Set/26', comentarios: ['Producao assistida realizada', 'Planejamento de teste em andamento', 'Previsao para final de maio'], risco: 'Alta concentracao de solvent retido', plano: ['Alinhar pontos criticos', 'Monitorar ajustes de processo', 'Validar custo-beneficio'], impacto: 'Medio' }
+    ],
+    risks: [
+      { title: '1. Migration Report Delay', impact: 'LEEP / HUSK', description: 'Atrasos na conclusao dos testes e documentacao de migracao podem postergar a conclusao do projeto.', color: 'red' },
+      { title: '2. Process Instability', impact: 'LUFS', description: 'Resina nao e contratipo e apresenta menor temperatura de processo, com risco de instabilidade de balao.', color: 'yellow' },
+      { title: '3. Material Performance Risk', impact: 'CASSA & BRENN515', description: 'Riscos relacionados a fluidez do amido e retencao de solvente podem impactar custo e desempenho.', color: 'yellow' }
+    ],
+    pipeline: {
+      total: 'TOTAL USD 3.817k',
+      items: [
+        { name: 'LUFS', value: 1811 },
+        { name: 'HUSK', value: 657 },
+        { name: 'LEEP', value: 654 },
+        { name: 'FATY', value: 363 },
+        { name: 'CASSA', value: 272 },
+        { name: 'Brenntag 515', value: 60 }
+      ]
+    }
+  };
+
+  var STORAGE_KEY = 'rmrEditableDashboard';
+  var state = loadState();
+  var savingChart = null;
+  var pipelineChart = null;
+
+  function deepClone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  }
+
+  function loadState() {
+    try {
+      var saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return deepClone(defaults);
+      var parsed = JSON.parse(saved);
+      return mergeDefaults(deepClone(defaults), parsed);
+    } catch (err) {
+      console.warn('Estado salvo invalido. Usando padrao.', err);
+      return deepClone(defaults);
+    }
+  }
+
+  function mergeDefaults(base, incoming) {
+    if (!incoming || typeof incoming !== 'object') return base;
+    Object.keys(incoming).forEach(function (key) {
+      if (incoming[key] && typeof incoming[key] === 'object' && !Array.isArray(incoming[key]) && base[key]) {
+        base[key] = mergeDefaults(base[key], incoming[key]);
+      } else {
+        base[key] = incoming[key];
+      }
+    });
+    return base;
+  }
+
+  function persist() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function toNumber(value) {
+    if (value === '' || value === null || value === undefined) return null;
+    var n = Number(value);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function calcPct(value, total) {
+    var t = Number(total) || 0;
+    var v = Number(value) || 0;
+    if (t <= 0) return '| 0%';
+    return '| ' + Math.round((v / t) * 100) + '%';
+  }
+
+  function splitLines(value) {
+    return String(value || '').split(/\r?\n/).map(function (line) { return line.trim(); }).filter(Boolean).slice(0, 3);
+  }
+
+  function renderBullets(lines) {
+    var list = Array.isArray(lines) ? lines : splitLines(lines);
+    return '<ul class="bullets">' + list.slice(0, 3).map(function (item) { return '<li>' + escapeHtml(item) + '</li>'; }).join('') + '</ul>';
+  }
+
+  function statusDotClass(status) {
+    var map = { 'Em risco': 'red', 'Atencao': 'yellow', 'Atenção': 'yellow', 'On track': 'green', 'On hold': 'gray', 'Concluido': 'green', 'Concluído': 'green' };
+    return map[status] || 'gray';
+  }
+
+  function impactClass(impact) {
+    var map = { 'Muito Alto': 'very', 'Alto': 'high', 'Medio': 'medium', 'Médio': 'medium', 'Baixo': 'low', 'Neutro': 'neutral' };
+    return map[impact] || 'neutral';
+  }
+
+  window.toggleAdmin = function () {
+    $('adminPanel').classList.toggle('hidden');
+  };
+
+  window.saveGeneral = function () {
+    state.general = {
+      updated: $('updatedInput').value,
+      total: toNumber($('inpTotal').value) || 0,
+      done: toNumber($('inpDone').value) || 0,
+      progress: toNumber($('inpProgress').value) || 0,
+      hold: toNumber($('inpHold').value) || 0,
+      risk: toNumber($('inpRisk').value) || 0,
+      saving: $('inpSaving').value
+    };
+    persist();
+    renderGeneral();
+  };
+
+  function renderGeneral() {
+    var g = state.general;
+    $('updatedView').textContent = g.updated;
+    $('kpiTotal').textContent = g.total;
+    $('kpiDone').textContent = g.done;
+    $('kpiProgress').textContent = g.progress;
+    $('kpiHold').textContent = g.hold;
+    $('kpiRisk').textContent = g.risk;
+    $('kpiSaving').textContent = g.saving;
+    $('pctDone').textContent = calcPct(g.done, g.total);
+    $('pctProgress').textContent = calcPct(g.progress, g.total);
+    $('pctHold').textContent = calcPct(g.hold, g.total);
+    $('pctRisk').textContent = calcPct(g.risk, g.total);
+    $('updatedInput').value = g.updated;
+    $('inpTotal').value = g.total;
+    $('inpDone').value = g.done;
+    $('inpProgress').value = g.progress;
+    $('inpHold').value = g.hold;
+    $('inpRisk').value = g.risk;
+    $('inpSaving').value = g.saving;
+  }
+
+  function renderProjects() {
+    var tbody = document.querySelector('#statusTable tbody');
+    tbody.innerHTML = state.projects.map(function (p, index) {
+      return '<tr>' +
+        '<td class="project">' + escapeHtml(p.projeto) + '</td>' +
+        '<td>' + escapeHtml(p.cms) + '</td>' +
+        '<td><span class="dot ' + statusDotClass(p.status) + '"></span>' + escapeHtml(p.status) + '</td>' +
+        '<td>' + escapeHtml(p.previsao) + '</td>' +
+        '<td>' + renderBullets(p.comentarios) + '</td>' +
+        '<td>' + escapeHtml(p.risco) + '</td>' +
+        '<td>' + renderBullets(p.plano) + '</td>' +
+        '<td><span class="pill ' + impactClass(p.impacto) + '">' + escapeHtml(p.impacto) + '</span></td>' +
+        '<td class="actions-cell"><button class="btn-secondary btn-small" type="button" onclick="editProject(' + index + ')">Editar</button><button class="btn-danger btn-small" type="button" onclick="deleteProject(' + index + ')">Excluir</button></td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  window.clearProjectForm = function () {
+    $('projectForm').reset();
+    $('editProjectIndex').value = '';
+    $('projectSaveBtn').textContent = 'Adicionar';
+  };
+
+  window.editProject = function (index) {
+    var p = state.projects[index];
+    $('adminPanel').classList.remove('hidden');
+    $('editProjectIndex').value = index;
+    $('projeto').value = p.projeto;
+    $('cms').value = p.cms;
+    $('status').value = p.status;
+    $('previsao').value = p.previsao;
+    $('comentarios').value = (p.comentarios || []).join('\n');
+    $('risco').value = p.risco;
+    $('plano').value = (p.plano || []).join('\n');
+    $('impacto').value = p.impacto;
+    $('projectSaveBtn').textContent = 'Salvar';
+  };
+
+  window.deleteProject = function (index) {
+    state.projects.splice(index, 1);
+    persist();
+    renderProjects();
+    window.clearProjectForm();
+  };
+
+  window.resetProjects = function () {
+    state.projects = deepClone(defaults.projects);
+    persist();
+    renderProjects();
+    window.clearProjectForm();
+  };
+
+  $('projectForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    var project = {
+      projeto: $('projeto').value,
+      cms: $('cms').value,
+      status: $('status').value,
+      previsao: $('previsao').value,
+      comentarios: splitLines($('comentarios').value),
+      risco: $('risco').value,
+      plano: splitLines($('plano').value),
+      impacto: $('impacto').value
+    };
+    var index = $('editProjectIndex').value;
+    if (index === '') state.projects.push(project);
+    else state.projects[Number(index)] = project;
+    persist();
+    renderProjects();
+    window.clearProjectForm();
+  });
+
+  function renderSavingMeta() {
+    var meta = state.savingMeta;
+    $('actualLabelPeriod').textContent = meta.actualPeriod;
+    $('planLabelPeriod').textContent = meta.planPeriod;
+    $('savingActualCard').textContent = meta.actualCard;
+    $('savingPlanCard').textContent = meta.planCard;
+    $('actualPeriod').value = meta.actualPeriod;
+    $('actualCard').value = meta.actualCard;
+    $('planPeriod').value = meta.planPeriod;
+    $('planCard').value = meta.planCard;
+
+    var lastAct = findLastValue(state.savingRows, 'act');
+    var lastPlan = findLastValue(state.savingRows, 'plan');
+    var gap = lastPlan ? Math.round(((lastAct - lastPlan) / lastPlan) * 100) : 0;
+    $('gapText').textContent = '(' + gap + '% vs Plan)';
+  }
+
+  function findLastValue(rows, key) {
+    for (var i = rows.length - 1; i >= 0; i--) {
+      if (rows[i][key] !== null && rows[i][key] !== '') return Number(rows[i][key]) || 0;
+    }
+    return 0;
+  }
+
+  window.saveSavingsMeta = function () {
+    state.savingMeta = {
+      actualPeriod: $('actualPeriod').value,
+      actualCard: $('actualCard').value,
+      planPeriod: $('planPeriod').value,
+      planCard: $('planCard').value
+    };
+    persist();
+    renderSavingMeta();
+  };
+
+  function renderSavingEdit() {
+    var tbody = document.querySelector('#savingEditTable tbody');
+    tbody.innerHTML = state.savingRows.map(function (row, index) {
+      return '<tr><td>' + escapeHtml(row.month) + '</td>' +
+        '<td><input data-save-row="' + index + '" data-kind="plan" value="' + escapeHtml(row.plan == null ? '' : row.plan) + '"></td>' +
+        '<td><input data-save-row="' + index + '" data-kind="act" value="' + escapeHtml(row.act == null ? '' : row.act) + '"></td></tr>';
+    }).join('');
+  }
+
+  window.saveSavingRows = function () {
+    document.querySelectorAll('[data-save-row]').forEach(function (input) {
+      var index = Number(input.getAttribute('data-save-row'));
+      var kind = input.getAttribute('data-kind');
+      state.savingRows[index][kind] = toNumber(input.value);
+    });
+    persist();
+    renderSavingChart();
+    renderSavingMeta();
+  };
+
+  function renderSavingChart() {
+    if (!window.Chart) return;
+    if (savingChart) savingChart.destroy();
+    savingChart = new Chart($('savingChart'), {
+      type: 'line',
+      data: {
+        labels: state.savingRows.map(function (row) { return row.month; }),
+        datasets: [
+          { label: 'Plan (USD k)', data: state.savingRows.map(function (row) { return row.plan; }), borderColor: '#0067B1', backgroundColor: 'transparent', borderDash: [7, 5], tension: .25, pointRadius: 4, pointBackgroundColor: '#0067B1', datalabels: { align: 'top', offset: 4 } },
+          { label: 'Act (USD k)', data: state.savingRows.map(function (row) { return row.act; }), borderColor: '#008998', backgroundColor: 'rgba(0,137,152,.12)', fill: true, tension: .25, pointRadius: 4, pointBackgroundColor: '#008998', datalabels: { align: 'bottom', offset: 4 } }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top', align: 'start' },
+          datalabels: { formatter: function (value) { return value === null || value === '' ? '' : Number(value).toLocaleString('en-US', { maximumFractionDigits: 1 }); }, font: { size: 10, weight: '700' }, color: '#123047' }
+        },
+        scales: { y: { beginAtZero: true, grid: { color: '#E6ECEF' }, title: { display: true, text: 'USD (k)' } }, x: { grid: { display: false } } }
+      }
+    });
+  }
+
+  function renderRisks() {
+    var colors = { red: 'var(--red)', yellow: '#F9A602', sea: 'var(--sea2)', green: 'var(--green)' };
+    $('riskGrid').innerHTML = state.risks.map(function (risk, index) {
+      return '<div class="risk-card" style="color:' + (colors[risk.color] || 'var(--red)') + '">' +
+        '<div class="risk-head"><div class="risk-icon">!</div><div>' + escapeHtml(risk.title) + '<br><span style="color:#123047;font-weight:500">Impacta: <b>' + escapeHtml(risk.impact) + '</b></span></div></div>' +
+        '<p>' + escapeHtml(risk.description) + '</p>' +
+        '<div class="risk-actions"><button class="btn-secondary btn-small" type="button" onclick="editRisk(' + index + ')">Editar</button><button class="btn-danger btn-small" type="button" onclick="deleteRisk(' + index + ')">Excluir</button></div>' +
+        '</div>';
+    }).join('');
+  }
+
+  function clearRiskForm() {
+    $('riskForm').reset();
+    $('editRiskIndex').value = '';
+    $('riskSaveBtn').textContent = 'Adicionar';
+  }
+
+  window.editRisk = function (index) {
+    var risk = state.risks[index];
+    $('adminPanel').classList.remove('hidden');
+    $('editRiskIndex').value = index;
+    $('riskTitle').value = risk.title;
+    $('riskImpact').value = risk.impact;
+    $('riskDescription').value = risk.description;
+    $('riskColor').value = risk.color;
+    $('riskSaveBtn').textContent = 'Salvar';
+  };
+
+  window.deleteRisk = function (index) {
+    state.risks.splice(index, 1);
+    persist();
+    renderRisks();
+    clearRiskForm();
+  };
+
+  $('riskForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    var risk = { title: $('riskTitle').value, impact: $('riskImpact').value, description: $('riskDescription').value, color: $('riskColor').value };
+    var index = $('editRiskIndex').value;
+    if (index === '') state.risks.push(risk);
+    else state.risks[Number(index)] = risk;
+    persist();
+    renderRisks();
+    clearRiskForm();
+  });
+
+  function renderPipeline() {
+    if (pipelineChart) pipelineChart.destroy();
+    var items = state.pipeline.items;
+    var total = items.reduce(function (sum, item) { return sum + (Number(item.value) || 0); }, 0);
+    var top = items.reduce(function (max, item) { return Math.max(max, Number(item.value) || 0); }, 0);
+
+    $('pipelineTotalView').textContent = state.pipeline.total;
+    $('pipelineTotal').value = state.pipeline.total;
+    $('topPipelinePct').textContent = total ? Math.round((top / total) * 100) + '%' : '0%';
+
+    document.querySelector('#pipelineTable tbody').innerHTML = items.map(function (item, index) {
+      return '<tr><td>' + escapeHtml(item.name) + '</td><td>' + escapeHtml(item.value) + '</td><td><button class="btn-secondary btn-small" type="button" onclick="editPipeline(' + index + ')">Editar</button><button class="btn-danger btn-small" type="button" onclick="deletePipeline(' + index + ')">Excluir</button></td></tr>';
+    }).join('');
+
+    if (!window.Chart) return;
+    pipelineChart = new Chart($('pipelineChart'), {
+      type: 'bar',
+      data: {
+        labels: items.map(function (item) { return item.name; }),
+        datasets: [{ data: items.map(function (item) { return item.value; }), backgroundColor: ['#006772', '#008998', '#008998', '#33A1AD', '#66B8C1', '#99D0D6', '#ADB2B6'], barThickness: 20 }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          datalabels: { anchor: 'end', align: 'right', formatter: function (value) { return '$' + Number(value).toLocaleString('en-US', { maximumFractionDigits: 1 }) + 'k'; }, font: { size: 11, weight: '800' }, color: '#123047' }
+        },
+        scales: { x: { grid: { color: '#E6ECEF' }, ticks: { display: false }, suggestedMax: Math.max(1, top * 1.22) }, y: { grid: { display: false }, ticks: { font: { weight: 900 } } } }
+      }
+    });
+  }
+
+  window.savePipelineTotal = function () {
+    state.pipeline.total = $('pipelineTotal').value;
+    persist();
+    renderPipeline();
+  };
+
+  function clearPipelineForm() {
+    $('pipelineForm').reset();
+    $('editPipelineIndex').value = '';
+    $('pipelineSaveBtn').textContent = 'Adicionar/Salvar';
+    $('pipelineTotal').value = state.pipeline.total;
+  }
+
+  window.editPipeline = function (index) {
+    var item = state.pipeline.items[index];
+    $('adminPanel').classList.remove('hidden');
+    $('editPipelineIndex').value = index;
+    $('pipeName').value = item.name;
+    $('pipeValue').value = item.value;
+    $('pipelineSaveBtn').textContent = 'Salvar';
+  };
+
+  window.deletePipeline = function (index) {
+    state.pipeline.items.splice(index, 1);
+    persist();
+    renderPipeline();
+    clearPipelineForm();
+  };
+
+  $('pipelineForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    var item = { name: $('pipeName').value, value: Number($('pipeValue').value) };
+    var index = $('editPipelineIndex').value;
+    if (index === '') state.pipeline.items.push(item);
+    else state.pipeline.items[Number(index)] = item;
+    state.pipeline.total = $('pipelineTotal').value;
+    persist();
+    renderPipeline();
+    clearPipelineForm();
+  });
+
+  window.resetAll = function () {
+    state = deepClone(defaults);
+    persist();
+    renderAll();
+  };
+
+  function runTests() {
+    console.assert(splitLines('a\nb\nc\nd').length === 3, 'splitLines limita a 3 linhas');
+    console.assert(calcPct(8, 17) === '| 47%', 'Percentual de concluidos deve ser 47%');
+    console.assert(impactClass('Muito Alto') === 'very', 'Impacto Muito Alto deve mapear para very');
+    console.assert(statusDotClass('Atencao') === 'yellow', 'Status Atencao deve mapear para yellow');
+    console.assert(escapeHtml('<x>') === '&lt;x&gt;', 'escapeHtml deve escapar tags');
+  }
+
+  function renderAll() {
+    renderGeneral();
+    renderProjects();
+    renderSavingMeta();
+    renderSavingEdit();
+    renderSavingChart();
+    renderRisks();
+    renderPipeline();
+  }
+
+  runTests();
+  renderAll();
+}());
+</script>
+</body>
+</html>
